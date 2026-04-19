@@ -1,0 +1,240 @@
+[
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "Slim Fit Blue Jeans",
+    "description": "Stretch denim skinny jeans",
+    "price": 2199,
+    "image": [
+      {
+        "public_id": "unsplash_1",
+        "url": "https://images.unsplash.com/photo-1542272604-787c3835535d?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "Jeans",
+    "stock": 95,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:03:01.418Z"
+  },
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "White T-Shirt",
+    "description": "Basic cotton t-shirt",
+    "price": 799,
+    "image": [
+      {
+        "public_id": "unsplash_2",
+        "url": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "T-Shirts",
+    "stock": 120,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:05:01.418Z"
+  },
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "Running Shoes",
+    "description": "Lightweight running shoes",
+    "price": 2999,
+    "image": [
+      {
+        "public_id": "unsplash_3",
+        "url": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "Shoes",
+    "stock": 60,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:06:01.418Z"
+  },
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "Leather Wallet",
+    "description": "Premium leather wallet",
+    "price": 1299,
+    "image": [
+      {
+        "public_id": "unsplash_4",
+        "url": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "Accessories",
+    "stock": 70,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:07:01.418Z"
+  },
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "Formal Shirt",
+    "description": "Office wear shirt",
+    "price": 1499,
+    "image": [
+      {
+        "public_id": "unsplash_5",
+        "url": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "Shirts",
+    "stock": 85,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:08:01.418Z"
+  },
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "Smart Watch",
+    "description": "Fitness smartwatch",
+    "price": 4999,
+    "image": [
+      {
+        "public_id": "unsplash_6",
+        "url": "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "Electronics",
+    "stock": 40,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:09:01.418Z"
+  },
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "Backpack",
+    "description": "Travel backpack",
+    "price": 1999,
+    "image": [
+      {
+        "public_id": "unsplash_7",
+        "url": "https://images.unsplash.com/photo-1509762774605-f07235a08f1f?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "Bags",
+    "stock": 75,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:10:01.418Z"
+  },
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "Sunglasses",
+    "description": "UV protection glasses",
+    "price": 999,
+    "image": [
+      {
+        "public_id": "unsplash_8",
+        "url": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "Accessories",
+    "stock": 65,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:11:01.418Z"
+  },
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "Gaming Headset",
+    "description": "High quality headset",
+    "price": 3499,
+    "image": [
+      {
+        "public_id": "unsplash_9",
+        "url": "https://images.unsplash.com/photo-1518444028785-8f9c3f1e9f4a?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "Electronics",
+    "stock": 50,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:12:01.418Z"
+  },
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "Hoodie",
+    "description": "Warm hoodie",
+    "price": 1799,
+    "image": [
+      {
+        "public_id": "unsplash_10",
+        "url": "https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "Winter Wear",
+    "stock": 55,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:13:01.418Z"
+  },
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "Bluetooth Speaker",
+    "description": "Portable speaker",
+    "price": 2499,
+    "image": [
+      {
+        "public_id": "unsplash_11",
+        "url": "https://images.unsplash.com/photo-1585386959984-a41552231658?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "Electronics",
+    "stock": 45,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:14:01.418Z"
+  },
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "Cap",
+    "description": "Sports cap",
+    "price": 599,
+    "image": [
+      {
+        "public_id": "unsplash_12",
+        "url": "https://images.unsplash.com/photo-1521369909029-2afed882baee?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "Accessories",
+    "stock": 100,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:15:01.418Z"
+  },
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "Laptop Stand",
+    "description": "Ergonomic stand",
+    "price": 1599,
+    "image": [
+      {
+        "public_id": "unsplash_13",
+        "url": "https://images.unsplash.com/photo-1587614382346-ac5f4e1bba55?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "Electronics",
+    "stock": 35,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:16:01.418Z"
+  },
+  {
+    "ratings": 0,
+    "numOfReviews": 0,
+    "name": "Sneakers",
+    "description": "Casual sneakers",
+    "price": 2799,
+    "image": [
+      {
+        "public_id": "unsplash_14",
+        "url": "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?q=80&w=1026&auto=format&fit=crop"
+      }
+    ],
+    "category": "Shoes",
+    "stock": 68,
+    "reviews": [],
+    "createdAt": "2026-01-26T09:17:01.418Z"
+  }
+]

@@ -14,7 +14,7 @@ const Product = ({ product }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition overflow-hidden border border-slate-100 group block">
         <Link to={`/product/${product._id}`} className="group block">
-            <img src={productImage} alt={product.name} className="h-56 w-full object-cover group-hover:scale-105 transition" />
+            <img src={productImage} alt={product.name} className="h-56 w-full object-cover group-hover:scale-105 transition" loading="lazy" />
         </Link>
         <div className="p-4 space-y-2">
             <Link to={`/product/${product._id}`}>

@@ -1,13 +1,14 @@
 import User from "../models/userModel.js";
 import HandleError from "../helper/handleError.js"; 
 import { sendToken } from "../helper/jwtToken.js"; 
-import { sendEmail } from "../helper/sendEmail.js"; // Added from video
-import crypto from "crypto"; // Added from video
+import { sendEmail } from "../helper/sendEmail.js"; 
+import crypto from "crypto"; 
+import {v2 as cloudinary} from "cloudinary";
 
 // --- REGISTER USER ---
 export const registerUser = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, avatar } = req.body;
 
     // Basic Validation
     if (!name) {
@@ -19,6 +20,12 @@ export const registerUser = async (req, res, next) => {
     if (!password) {
       return next(new HandleError("Password cannot be empty", 400));
     }
+ 
+     const myCloud = await cloudinary.uploader.upload(avatar, {
+    folder: "avatars",
+    width: 150,
+    crop: "scale",
+  });
 
     // Create the user in the database
     const user = await User.create({
@@ -26,9 +33,9 @@ export const registerUser = async (req, res, next) => {
       email,
       password,
       avatar: {
-        public_id: "temp_id",
-        url: "temp_url",
-      },
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url,
+    },
     });
 
     sendToken(user, 201, res); 

@@ -19,7 +19,7 @@ const Products = () => {
     // URL parameter extraction
     const [searchParams] = useSearchParams();
     const keyword = searchParams.get("keyword") || "";
-    
+    const category = searchParams.get("category") || "";
     // Pagination state
     const pageFromURL = parseInt(searchParams.get("page"), 10) || 1;
     const [currentPage, setCurrentPage] = useState(pageFromURL);
@@ -42,10 +42,21 @@ const Products = () => {
         }
     };
 
+    const handleCategory = (cat)=>{
+        const newSearchParams = new URLSearchParams(location.search);
+        newSearchParams.delete("page");
+        if(cat === "All"){
+            newSearchParams.delete("category");
+        } else {
+            newSearchParams.set("category", cat);
+        }
+        navigate(`?${newSearchParams.toString()}`);
+    }
+
     // Dispatch getProduct with keyword and page
     useEffect(() => {
-        dispatch(getProduct({ keyword, page: currentPage }));
-    }, [dispatch, keyword, currentPage]);
+        dispatch(getProduct({ keyword, page: currentPage, category }));
+    }, [dispatch, keyword, currentPage, category]);
 
     useEffect(() => {
         if (error) {
@@ -68,16 +79,16 @@ const Products = () => {
                             <div className="bg-white p-6 rounded-lg shadow-sm sticky top-24">
                                 <h3 className="text-xl font-semibold mb-4 text-gray-800 border-b border-slate-200 pb-2">Categories</h3>
                                 <ul className="space-y-2">
-                                    {["Electronics", "Fashion", "Home Decor", "Books"].map((cat) => (
+                                    {["All","Electronics", "Shoes", "Clothing", "Home", "Accessories"].map((cat) => (
                                         <li key={cat}>
-                                            <button className="text-gray-600 hover:text-blue-600 transition-colors">{cat}</button>
+                                            <button onClick={()=>handleCategory(cat)} className="text-gray-600 hover:text-blue-600 transition-colors">{cat}</button>
                                         </li>
                                     ))}
                                 </ul>
                             </div>
                         </aside>
 
-                        <section className="w-full md:w-3/4 bg-white p-4 rounded">
+                        <section className="w-full md:w-3/4 bg-white p-6 rounded-lg shadow-sm">
                             <div className="flex justify-between items-center mb-6">
                                 <h3 className="text-xl font-semibold text-gray-800">Our Products</h3>
                                 <span className="text-gray-500 text-sm">{products?.length || 0} items found</span>
@@ -101,7 +112,13 @@ const Products = () => {
 
                     {/* Pagination Section */}
                     <div className="mt-12 flex justify-center">
-                        <Pagination/>
+                        {totalPages > 1 && (
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={handlePageChange}
+                            />
+                        )}
                     </div>
                 </main>
 

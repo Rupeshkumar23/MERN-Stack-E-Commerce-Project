@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { ShoppingBag, Search, ShoppingCart, User, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const isAuthenticated = false;
+  const { isAuthenticated} = useSelector((state) => state.user);
   
   // Added search query state as shown in the video
   const [searchQuery, setSearchQuery] = useState("");

@@ -4,8 +4,22 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import ProductDetails from "./pages/ProductDetails";
 import Products from "./pages/Products";
+import Register from "./User/Register";
+import Login from "./User/Login";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { loadUser } from "./features/user/userSlice";
+
 
 const App = () => {
+   const { isAuthenticated } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(loadUser());
+    }
+  }, [dispatch, isAuthenticated]);
   return (
     <BrowserRouter>
       <Routes>
@@ -14,6 +28,8 @@ const App = () => {
             <Route path="/products" element={<Products />} />
         <Route path="/about-us" element={<About />} />
         <Route path="/contact-us" element={<Contact />} />
+         <Route path="/register" element={<Register />} />
+         <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );

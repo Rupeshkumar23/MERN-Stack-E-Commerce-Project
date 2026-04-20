@@ -2,9 +2,16 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 // Fetch all products
-export const getProduct = createAsyncThunk("product/getProduct", async ({ keyword, page = 1 }, { rejectWithValue }) => {
+export const getProduct = createAsyncThunk("product/getProduct", async ({ keyword, page = 1, category }, { rejectWithValue }) => {
     try {
-        const link = keyword ? `/api/v1/products?keyword=${encodeURIComponent(keyword)}&page=${page}` : `/api/v1/products?page=${page}`;
+        // const link = keyword ? `/api/v1/products?keyword=${encodeURIComponent(keyword)}&page=${page}` : `/api/v1/products?page=${page}`;
+        let link = "/api/v1/products?page=" + page;
+        if(category){
+            link += `&category=${category}`;
+        }
+        if (keyword) {
+            link += `&keyword=${keyword}`;
+        }
         const { data } = await axios.get(link);
         return data;
     } catch (error) {
@@ -31,7 +38,7 @@ const productSlice = createSlice({
         loading: false,
         error: null,
         product: null, 
-        resultsPerPage: 4, 
+        resultsPerPage: 6, 
         totalPages: 0,
     },
     reducers: {

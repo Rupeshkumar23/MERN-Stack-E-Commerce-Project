@@ -21,7 +21,7 @@ export const addProducts = async (req, res, next) => {
 export const getAllProducts = async (req, res, next) => {
     try {
         // Set how many products you want to display per page
-        const resultsPerPage = 4;
+        const resultsPerPage = 6;
 
         // 1. Apply Search and Filter using APIHelper
         const apiHelper = new APIHelper(Product.find(), req.query).search().filter();

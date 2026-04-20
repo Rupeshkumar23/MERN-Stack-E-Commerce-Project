@@ -40,7 +40,7 @@ const Rating = ({ value = 0, onRatingChange, disabled = false, showValue = true 
           );
         })}
       </div>
-      {showValue && <span className="text-xs font-semibold text-gray-500">{rating}/5</span>}
+      {showValue && <span className="text-xs font-semibold text-gray-500">{Number(rating.toFixed(1))}/5</span>}
     </div>
   );
 };

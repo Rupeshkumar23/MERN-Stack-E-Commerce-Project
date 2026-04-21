@@ -9,7 +9,7 @@ const Profile = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (isAuthenticated ==false) {
+        if (isAuthenticated == false) {
             navigate("/login");
         }
     }, [isAuthenticated, loading, navigate]);
@@ -54,12 +54,18 @@ const Profile = () => {
                                 </p>
                             </div>
 
-                            <div className="pt-2">
+                            <div className="w-full mt-8 flex gap-4 flex-col sm:flex-row">
                                 <Link
                                     to="/profile/update"
                                     className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all active:scale-[0.98]"
                                 >
                                     Edit Profile
+                                </Link>
+                                <Link
+                                    to="/password/update"
+                                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded shadow-md text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all active:scale-[0.98]"
+                                >
+                                    Change Password
                                 </Link>
                             </div>
                         </div>

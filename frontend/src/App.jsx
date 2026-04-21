@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { loadUser } from "./features/user/userSlice";
 import UpdateProfile from "./User/UpdateProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import UpdatePassword from "./User/UpdatePassword";
 
 
 
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/contact-us" element={<Contact />} />
         <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
         <Route path="/profile/update" element={<ProtectedRoute element={<UpdateProfile />} />} />
+        <Route path="/password/update" element={<ProtectedRoute element={<UpdatePassword/>} />} />
          <Route path="/register" element={<Register />} />
          <Route path="/login" element={<Login />} />
       </Routes>

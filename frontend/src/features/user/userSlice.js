@@ -46,6 +46,30 @@ export const login = createAsyncThunk("user/login", async ({ email, password }, 
     return rejectWithValue(error.response?.data || "Login failed. Please try again later");
   }
 });
+//Logout API
+export const logout = createAsyncThunk("user/logout", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get("/api/v1/logout");
+    return data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data || "Logout failed");
+  }
+});
+// Update Profile
+export const updateProfile = createAsyncThunk("user/updateProfile", async (userData, { rejectWithValue }) => {
+    try {
+        const config = {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        };
+
+        const { data } = await axios.put("/api/v1/profile/update", userData, config);
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data || "Profile update failed. Please try again");
+    }
+});
 
 const userSlice = createSlice({
     name: "user",
@@ -88,7 +112,7 @@ const userSlice = createSlice({
             state.isAuthenticated = false;
         });
 
-        //Login
+    //Login
      builder.addCase(login.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -112,6 +136,26 @@ const userSlice = createSlice({
 
       localStorage.removeItem("user");
       localStorage.removeItem("isAuthenticated");
+    });
+
+//Logout
+    builder.addCase(logout.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(logout.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = null;
+      state.user = null;
+      state.isAuthenticated = false;
+
+      // Remove from localStorage
+      localStorage.removeItem("user");
+      localStorage.removeItem("isAuthenticated");
+    })
+    .addCase(logout.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload?.message || "Logout failed";
     });
 
     // Loading User
@@ -142,6 +186,26 @@ const userSlice = createSlice({
         localStorage.removeItem("user");
         localStorage.removeItem("isAuthenticated");
       });
+      // Update Profile
+    builder.addCase(updateProfile.pending, (state) => {
+    state.loading = true;
+    state.error = null;
+    state.isUpdated = false;
+})
+    .addCase(updateProfile.fulfilled, (state, action) => {
+    state.loading = false;
+    state.error = null;
+    state.success = action.payload.success;
+    state.isUpdated = action.payload.success;
+    state.user = action.payload.user;
+    
+    localStorage.setItem("user", JSON.stringify(state.user));
+})
+.   addCase(updateProfile.rejected, (state, action) => {
+    state.loading = false;
+    state.error = action.payload?.message || "Profile update failed. Please try again";
+    state.isUpdated = false;
+})
 
     }
 });

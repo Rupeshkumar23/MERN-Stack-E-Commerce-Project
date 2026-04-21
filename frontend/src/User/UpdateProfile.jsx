@@ -33,21 +33,29 @@ const UpdateProfile = () => {
             toast.success("Profile updated successfully", { position: "top-center", autoClose: 3000 });
             dispatch(loadUser());
             navigate("/profile");
-            dispatch(removeSuccess());
+            return () => {
+      dispatch(removeSuccess());
+    };
         }
 
     }, [user, dispatch, error, success, navigate]);
 
     const handleChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
         const reader = new FileReader();
+
         reader.onload = () => {
             if (reader.readyState === 2) {
                 setPreview(reader.result);
                 setAvatar(reader.result);
             }
         };
-        reader.readAsDataURL(e.target.files[0]);
-    };
+
+        reader.readAsDataURL(file);
+    }
+};;
 
     const updateProfileSubmit = (e) => {
         e.preventDefault();

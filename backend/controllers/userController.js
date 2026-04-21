@@ -220,17 +220,44 @@ export const updatePassword = async (req, res, next) => {
 
 //Update User Profile
 export const updateProfile = async (req, res, next) => {
-    const { name, email } = req.body;
+    try {
+        const { name, email, avatar } = req.body;
 
-    const updatedUserDetails = { name, email };
+        const updatedUserDetails = { name, email };
 
-    const user = await User.findByIdAndUpdate(req.user.id, updatedUserDetails, { new: true, runValidators: true });
+        if (avatar) {
+            const user = await User.findById(req.user.id);
 
-    res.status(200).json({
-        success: true,
-        message: "Profile Updated Successfully",
-        user,
-    });
+            // Destroy old avatar if it exists
+            if (user.avatar && user.avatar.public_id) {
+                await cloudinary.uploader.destroy(user.avatar.public_id);
+            }
+
+            const myCloud = await cloudinary.uploader.upload(avatar, {
+                folder: "avatars",
+                width: 150,
+                crop: "scale",
+            });
+
+            updatedUserDetails.avatar = {
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url,
+            };
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(req.user.id, updatedUserDetails, {
+            new: true,
+            runValidators: true,
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Profile Updated Successfully",
+            user: updatedUser,
+        });
+    } catch (error) {
+        next(error);
+    }
 };
 //Get All Users
 export const getUsers = async (req, res, next) => {

@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 
 const Login = () => {
   const [email, setEmail] = useState("");
-  const[password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const Login = () => {
       toast.error(error, { position: "top-center", autoClose: 3000 });
       dispatch(removeErrors());
     }
-  },[dispatch, error]);
+  }, [dispatch, error]);
 
   useEffect(() => {
     if (success) {
@@ -84,6 +84,13 @@ const Login = () => {
               Sign up Here
             </Link>
           </p>
+          <p className="text-center text-sm text-gray-600 mt-4">
+            Forgot your password?{' '}
+            <Link to="/password/forget" className="text-indigo-600 font-semibold hover:underline">
+              Reset Password
+            </Link>
+          </p>
+
         </form>
       </div>
     </div>

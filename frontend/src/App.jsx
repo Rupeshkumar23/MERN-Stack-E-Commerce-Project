@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -19,7 +19,7 @@ import ResetPassword from "./User/ResetPassword";
 
 
 const App = () => {
-   const { isAuthenticated } = useSelector((state) => state.user);
+  const { isAuthenticated } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -37,9 +37,10 @@ const App = () => {
         <Route path="/contact-us" element={<Contact />} />
         <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
         <Route path="/profile/update" element={<ProtectedRoute element={<UpdateProfile />} />} />
-        <Route path="/password/update" element={<ProtectedRoute element={<UpdatePassword/>} />} />
+        <Route path="/password/update" element={<ProtectedRoute element={<UpdatePassword />} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={ <Login />}
+        />
         <Route path="/password/forget" element={<ForgetPassword />} />
         <Route path="/password/reset/:token" element={<ResetPassword />} />
       </Routes>

@@ -91,6 +91,7 @@ export const logout = async(req, res, next) => {
 export const forgetPassword = async (req, res, next) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
+    const Frontend_URL = process.env.FRONTEND_URL;
 
     if (!user) {
         return next(new HandleError("User does not exists", 400));
@@ -106,7 +107,8 @@ export const forgetPassword = async (req, res, next) => {
         return next(new HandleError("Could not save reset token, Try again later..", 500));
     }
 
-    const resetPasswordURL = `${req.protocol}://${req.get("host")}/api/v1/reset/${resetToken}`;
+    // const resetPasswordURL = `${req.protocol}://${req.get("host")}/reset/${resetToken}`;
+    const resetPasswordURL = `${Frontend_URL}/password/reset/${resetToken}`;
 
     const messageHTML = `
     <div style="font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4;">

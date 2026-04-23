@@ -3,6 +3,7 @@ import { ShoppingBag, Search, ShoppingCart, User, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/user/userSlice";
+import { toast } from "react-hot-toast";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -12,11 +13,13 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    dispatch(logout());
-    setProfileDropdownOpen(false);
-    setOpen(false); // Close mobile menu on logout as well
-  };
+const handleLogout = async () => {
+  await dispatch(logout());
+  toast.success("Logged out successfully");
+  setProfileDropdownOpen(false);
+  setOpen(false);
+  navigate("/login"); 
+};
 
   const handleSearch = (e) => {
     e.preventDefault();

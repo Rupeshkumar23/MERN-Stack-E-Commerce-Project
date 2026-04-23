@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login, removeErrors } from "../features/user/userSlice";
+import { login, removeErrors, removeSuccess } from "../features/user/userSlice";
 import { toast } from "react-hot-toast";
 
 const Login = () => {
@@ -25,12 +25,13 @@ const Login = () => {
     }
   }, [dispatch, error]);
 
-  useEffect(() => {
-    if (success) {
-      toast.success("Login Successfully", { position: "top-center", autoClose: 3000 });
-      navigate("/");
-    }
-  }, [dispatch, success, navigate]);
+useEffect(() => {
+  if (isAuthenticated) {
+    toast.success("Login Successfully");
+    navigate("/");
+    dispatch(removeSuccess());
+  }
+}, [isAuthenticated, navigate, dispatch]);
 
   return (
     <div className="bg-gray-50 flex items-center justify-center min-h-screen">

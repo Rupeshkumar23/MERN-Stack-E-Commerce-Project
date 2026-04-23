@@ -107,7 +107,7 @@ export const resetPassword = createAsyncThunk("user/resetPassword", async ({ tok
             }
         };
         // Using PUT request and passing the token dynamically in the URL
-        const { data } = await axios.put(`/api/v1/password/reset/${token}`, userData, config);
+        const { data } = await axios.put(`/api/v1/reset/${token}`, userData, config);
         return data;
     } catch (error) {
         return rejectWithValue(error.response?.data || "Reset password failed");

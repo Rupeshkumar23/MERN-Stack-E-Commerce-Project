@@ -17,7 +17,7 @@ router.route("/logout").get(logout);
 router.route("/password/forget").post(forgetPassword);
 
 // Route for Password Reset (This actually updates the password when they click the email link)
-router.route("/reset/:token").post(resetPassword);
+router.route("/reset/:token").put(resetPassword);
 // Route for User Profile (Protected Route, user must be logged in to access their profile)
 router.route('/profile').get(verifyUser, profile);
 // Route for Password Update (User must be logged in to update their password)

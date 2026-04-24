@@ -8,6 +8,10 @@ import { toast } from "react-hot-toast";
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { isAuthenticated, user } = useSelector((state) => state.user);
+  
+  // Extract cartItems from the Redux state to display the dynamic count
+  const { cartItems } = useSelector((state) => state.cart);
+  
   const[profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
@@ -74,12 +78,14 @@ const handleLogout = async () => {
               </button>
             </form>
 
-            {/* Cart */}
+            {/* Cart - Updated with dynamic count from Redux */}
             <Link to="/cart" className="relative text-gray-700 hover:text-blue-600 transition">
               <ShoppingCart />
-              <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-semibold min-w-5 h-5 rounded-full flex items-center justify-center">
-                6
-              </span>
+              {cartItems?.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-semibold min-w-5 h-5 rounded-full flex items-center justify-center">
+                  {cartItems.length}
+                </span>
+              )}
             </Link>
 
             {/* Register / User Dropdown */}

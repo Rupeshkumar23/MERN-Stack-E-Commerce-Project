@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PageTitle from '../components/PageTitle';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -9,13 +9,21 @@ import { PackageCheck, ShoppingCart, Minus, Plus, MessageSquare, Calendar } from
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProductDetails, removeErrors } from '../features/products/productSlice';
+import { addToCartItem, removeErrors as removeCartErrors, removeMessage as removeCartMessage, removeSuccess as removeCartSuccess } from '../features/cart/cartSlice';
 import toast from 'react-hot-toast';
 import { calculateDiscount, formatDate } from '../utils/formatter';
 
 const ProductDetails = () => {
+
   const { id } = useParams();
   const dispatch = useDispatch();
+  
+  // Local state for tracking quantity
+  const [quantity, setQuantity] = useState(1);
+
+  // Redux state for product and cart
   const { loading, error, product } = useSelector((state) => state.product);
+  const { loading: cartLoading, error: cartError, success: cartSuccess, message: cartMessage } = useSelector((state) => state.cart);
 
   useEffect(() => {
     if (id) {
@@ -23,12 +31,49 @@ const ProductDetails = () => {
     }
   }, [dispatch, id]);
 
+  // Handle Product Errors
   useEffect(() => {
     if (error) {
         toast.error(error.message || error);
         dispatch(removeErrors());
     }
   }, [dispatch, error]);
+
+  // Handle Cart Success/Errors
+  useEffect(() => {
+    if (cartSuccess && cartMessage) {
+        toast.success(cartMessage);
+        dispatch(removeCartMessage());
+        dispatch(removeCartSuccess());
+    }
+    if (cartError) {
+        toast.error(cartError);
+        dispatch(removeCartErrors());
+    }
+  }, [dispatch, cartError, cartSuccess, cartMessage]);
+
+  // Increase Quantity Handler
+  const increaseQuantity = () => {
+    if (product.stock <= quantity) {
+        toast.error("Cannot exceed available stock!");
+        return;
+    }
+    setQuantity(quantity + 1);
+  };
+
+  // Decrease Quantity Handler
+  const decreaseQuantity = () => {
+    if (quantity <= 1) {
+        toast.error("Quantity cannot be less than 1");
+        return;
+    }
+    setQuantity(quantity - 1);
+  };
+
+  // Add to Cart Handler
+  const addToCartHandler = () => {
+    dispatch(addToCartItem({ id: product._id, quantity }));
+  };
 
   return loading ? (
     <Loader />
@@ -86,17 +131,25 @@ const ProductDetails = () => {
                                 </div>
 
                                 <div className="flex flex-wrap items-center gap-4">
+                                    {/* Quantity Selectors */}
                                     <div className="flex items-center border-2 border-gray-100 rounded-xl bg-white overflow-hidden">
-                                        <button className="p-4 hover:bg-gray-50 text-gray-600 transition-colors">
+                                        <button onClick={decreaseQuantity} className="p-4 hover:bg-gray-50 text-gray-600 transition-colors">
                                             <Minus size={18} />
                                         </button>
-                                        <span className="w-12 text-center font-semibold text-gray-900">1</span>
-                                        <button className="p-4 hover:bg-gray-50 text-gray-600 transition-colors">
+                                        <span className="w-12 text-center font-semibold text-gray-900">{quantity}</span>
+                                        <button onClick={increaseQuantity} className="p-4 hover:bg-gray-50 text-gray-600 transition-colors">
                                             <Plus size={18} />
                                         </button>
                                     </div>
-                                    <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl flex items-center justify-center gap-3 transition-all active:scale-95 shadow-xl shadow-blue-100">
-                                        <ShoppingCart /> Add to Cart
+                                    
+                                    {/* Add To Cart Button */}
+                                    <button 
+                                        disabled={cartLoading}
+                                        onClick={addToCartHandler}
+                                        className={`flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl flex items-center justify-center gap-3 transition-all active:scale-95 shadow-xl shadow-blue-100 ${cartLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    >
+                                        <ShoppingCart /> 
+                                        {cartLoading ? 'Adding...' : 'Add to Cart'}
                                     </button>
                                 </div>
                             </>

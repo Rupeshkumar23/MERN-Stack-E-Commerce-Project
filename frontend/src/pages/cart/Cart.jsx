@@ -6,16 +6,20 @@ import { clearCart } from '../../features/cart/cartSlice';
 import Footer from '../../components/Footer';
 import PageTitle from '../../components/PageTitle';
 import Navbar from '../../components/Navbar';
+import { useNavigate } from 'react-router-dom';
 // Import your layout components like Navbar, Footer, etc.
 
 const Cart = () => {
     const { cartItems } = useSelector((state) => state.cart);
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const tax = subtotal * 0.18;
     const shippingCharges = cartItems.length === 0 ? 0 : subtotal > 500 ? 0 : 50;
     const total = subtotal + tax + shippingCharges;
+    const checkoutHandler = () => {
+  navigate("/login?redirect=shipping");
+};
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -71,7 +75,7 @@ const Cart = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl mt-6 transition-colors">
+                                <button onClick={checkoutHandler} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl mt-6 transition-colors">
                                     Proceed to Checkout
                                 </button>
                             </div>

@@ -16,6 +16,9 @@ import UpdatePassword from "./User/UpdatePassword";
 import ForgetPassword from "./User/ForgetPassword";
 import ResetPassword from "./User/ResetPassword";
 import Cart from "./pages/cart/Cart";
+import Shipping from "./pages/cart/Shipping";
+import OrderConfirm from "./pages/cart/OrderConfirm";
+import Payment from "./pages/cart/Payment";
 
 
 
@@ -40,10 +43,13 @@ const App = () => {
         <Route path="/profile/update" element={<ProtectedRoute element={<UpdateProfile />} />} />
         <Route path="/password/update" element={<ProtectedRoute element={<UpdatePassword />} />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/login" element={ <Login />} />
-           <Route path="/cart" element={<Cart />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="/password/forget" element={<ForgetPassword />} />
         <Route path="/password/reset/:token" element={<ResetPassword />} />
+        <Route path="/shipping" element={<ProtectedRoute element={<Shipping />} />} />
+        <Route path="/order/confirm" element={<ProtectedRoute element={<OrderConfirm />} />} />
+        <Route path="/process/payment" element={<ProtectedRoute element={<Payment />} />} />
       </Routes>
     </BrowserRouter>
   );

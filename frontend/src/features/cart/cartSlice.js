@@ -19,6 +19,7 @@ export const addToCartItem = createAsyncThunk("cart/addToCart", async ({ id, qua
 
 const initialState = {
     cartItems: JSON.parse(localStorage.getItem("cartItems")) || [],
+    shippingInfo: JSON.parse(localStorage.getItem("shippingInfo")) || {},
     loading: false,
     error: null,
     success: false,
@@ -45,6 +46,10 @@ const cartSlice = createSlice({
         removeItemFromCart: (state, action) => {
             state.cartItems = state.cartItems.filter((i) => i.product !== action.payload);
             localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+        },
+        saveShippingInfo: (state, action) => {
+            state.shippingInfo = action.payload;
+            localStorage.setItem("shippingInfo", JSON.stringify(state.shippingInfo));
         }
     },
     extraReducers: (builder) => {
@@ -80,5 +85,5 @@ const cartSlice = createSlice({
     }
 });
 
-export const { removeErrors, removeMessage, removeSuccess, clearCart, removeItemFromCart } = cartSlice.actions;
+export const { removeErrors, removeMessage, removeSuccess, clearCart, removeItemFromCart, saveShippingInfo } = cartSlice.actions;
 export default cartSlice.reducer;

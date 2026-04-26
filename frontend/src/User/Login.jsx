@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, removeErrors, removeSuccess } from "../features/user/userSlice";
 import { toast } from "react-hot-toast";
@@ -10,9 +10,15 @@ const Login = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { error, loading, success, isAuthenticated } = useSelector((state) => state.user);
-
+const redirect = new URLSearchParams(location.search).get("redirect") ? `/${new URLSearchParams(location.search).get("redirect")}` : "/";
+useEffect(() => {
+  if (isAuthenticated) {
+    navigate(redirect);
+  }
+}, [dispatch, isAuthenticated]);
   const loginSubmit = (e) => {
     e.preventDefault();
     dispatch(login({ email, password }));
@@ -27,11 +33,12 @@ const Login = () => {
 
 useEffect(() => {
   if (isAuthenticated) {
-    toast.success("Login Successfully");
-    navigate("/");
+    if (!new URLSearchParams(location.search).get("redirect")) {
+      toast.success("Login Successfully");
+    }
     dispatch(removeSuccess());
   }
-}, [isAuthenticated, navigate, dispatch]);
+}, [isAuthenticated, dispatch, location.search]);
 
   return (
     <div className="bg-gray-50 flex items-center justify-center min-h-screen">

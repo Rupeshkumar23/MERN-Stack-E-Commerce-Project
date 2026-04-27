@@ -3,8 +3,8 @@ import ImageSlider from "../components/ImageSlider";
 import Footer from "../components/Footer";
 import Product from "../components/Product";
 import PageTitle from "../components/PageTitle";
-import Loader from "../components/Loader"; // 1. Import the Loader component
-import toast from "react-hot-toast"; // 2. Import toast for error messages
+import Loader from "../components/Loader"; 
+import toast from "react-hot-toast"; 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProduct, removeErrors } from "../features/products/productSlice"; // 3. Import removeErrors

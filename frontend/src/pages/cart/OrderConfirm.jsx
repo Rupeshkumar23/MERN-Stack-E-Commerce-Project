@@ -54,13 +54,13 @@ const OrderConfirm = () => {
                   </div>
                   <div>
                     <p className="text-sm text-slate-500 mb-1">Phone</p>
-                    <p className="text-slate-800 font-medium">{shippingInfo.phoneNumber}</p>
+                    <p className="text-slate-800 font-medium">{shippingInfo.phoneNo}</p>
                   </div>
                   <div className="md:col-span-2">
                     <p className="text-sm text-slate-500 mb-1">Address</p>
                     <p className="text-slate-800 font-medium">
                       {shippingInfo.address}, {shippingInfo.city}, {shippingInfo.state},{" "}
-                      {shippingInfo.country} - {shippingInfo.pincode}
+                      {shippingInfo.country} - {shippingInfo.pinCode}
                     </p>
                   </div>
                 </div>

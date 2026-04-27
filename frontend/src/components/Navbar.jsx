@@ -130,7 +130,7 @@ const handleLogout = async () => {
                         My Profile
                       </Link>
                       <Link
-                        to="/orders"
+                        to="/orders/user"
                         onClick={() => setProfileDropdownOpen(false)}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
@@ -221,7 +221,7 @@ const handleLogout = async () => {
                   My Profile
                 </Link>
                 <Link
-                  to="/orders"
+                  to="/orders/user"
                   onClick={() => setOpen(false)}
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 >

@@ -20,6 +20,8 @@ import Shipping from "./pages/cart/Shipping";
 import OrderConfirm from "./pages/cart/OrderConfirm";
 import Payment from "./pages/cart/Payment";
 import PaymentSuccess from "./pages/cart/PaymentSuccess";
+import MyOrders from "./orders/MyOrders";
+import OrderDetails from "./orders/OrderDetails";
 
 
 
@@ -52,6 +54,8 @@ const App = () => {
         <Route path="/order/confirm" element={<ProtectedRoute element={<OrderConfirm />} />} />
         <Route path="/process/payment" element={<ProtectedRoute element={<Payment />} />} />
         <Route path="/payment/success" element={<ProtectedRoute element={<PaymentSuccess />} />} />
+        <Route path="/orders/user" element={<ProtectedRoute element={<MyOrders />} />} />
+        <Route path="/order/:id" element={<ProtectedRoute element={<OrderDetails/>} />} />
       </Routes>
     </BrowserRouter>
   );

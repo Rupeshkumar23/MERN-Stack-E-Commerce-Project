@@ -12,8 +12,8 @@ import PageTitle from "../../components/PageTitle";
 const Shipping = () => {
   const { shippingInfo } = useSelector((state) => state.cart);
   const [address, setAddress] = useState(shippingInfo.address || "");
-  const [pincode, setPincode] = useState(shippingInfo.pincode || "");
-  const [phoneNumber, setPhoneNumber] = useState(shippingInfo.phoneNumber || "");
+  const [pinCode, setPinCode] = useState(shippingInfo.pinCode || shippingInfo.pincode || "");
+  const [phoneNo, setPhoneNo] = useState(shippingInfo.phoneNo || shippingInfo.phoneNumber || "");
   const [country, setCountry] = useState(shippingInfo.country || "");
   const [state, setState] = useState(shippingInfo.state || "");
   const [city, setCity] = useState(shippingInfo.city || "");
@@ -24,12 +24,12 @@ const Shipping = () => {
   const shippingHandler = (e) => {
     e.preventDefault();
 
-    if (!address || !pincode || !phoneNumber || !country || !state || !city) {
+    if (!address || !pinCode || !phoneNo || !country || !state || !city) {
       toast.error("Please fill all the details!", { position: "top-center", autoClose: 2000 });
       return;
     }
 
-    dispatch(saveShippingInfo({ address, pincode, phoneNumber, country, state, city }));
+    dispatch(saveShippingInfo({ address, pinCode, phoneNo, country, state, city }));
     navigate("/order/confirm");
   };
 
@@ -61,29 +61,29 @@ const Shipping = () => {
                       />
                     </div>
                     <div>
-                      <label htmlFor="pincode" className="block text-sm font-medium text-slate-700 mb-1.5">
+                      <label htmlFor="pinCode" className="block text-sm font-medium text-slate-700 mb-1.5">
                         Pincode
                       </label>
                       <input
                         type="text"
-                        name="pincode"
-                        id="pincode"
-                        value={pincode}
-                        onChange={(e) => setPincode(e.target.value)}
+                        name="pinCode"
+                        id="pinCode"
+                        value={pinCode}
+                        onChange={(e) => setPinCode(e.target.value)}
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition-all duration-300"
                         placeholder="Enter pincode"
                       />
                     </div>
                     <div>
-                      <label htmlFor="phoneNumber" className="block text-sm font-medium text-slate-700 mb-1.5">
+                      <label htmlFor="phoneNo" className="block text-sm font-medium text-slate-700 mb-1.5">
                         Phone Number
                       </label>
                       <input
                         type="text"
-                        name="phoneNumber"
-                        id="phoneNumber"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        name="phoneNo"
+                        id="phoneNo"
+                        value={phoneNo}
+                        onChange={(e) => setPhoneNo(e.target.value)}
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600 transition-all duration-300"
                         placeholder="Enter phone number"
                       />

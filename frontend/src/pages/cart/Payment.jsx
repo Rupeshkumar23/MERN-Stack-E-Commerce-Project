@@ -6,6 +6,7 @@ import CheckoutPath from "./CheckoutPath";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const Payment = () => {
    const navigate = useNavigate();
@@ -46,7 +47,7 @@ const Payment = () => {
                 prefill: {
                     name: user.name,
                     email: user.email,
-                    contact: shippingInfo.phoneNumber,
+                    contact: shippingInfo.phoneNo,
                 },
                 theme: {
                     color: "#059669",

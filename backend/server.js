@@ -2,6 +2,7 @@ import app from "./app.js";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import {v2 as cloudinary} from "cloudinary";
+import Razorpay from "razorpay";
 
 // Handle Uncaught Exceptions (Synchronous Errors)
 process.on("uncaughtException", (err) => {
@@ -13,6 +14,12 @@ process.on("uncaughtException", (err) => {
 // Config Environment Variables
 dotenv.config({ path: "./config/config.env" });
 const PORT = process.env.PORT || 8000;
+
+// Razorpay Instance
+export const instance = new Razorpay({
+    key_id: process.env.RAZORPAY_API_KEY,
+    key_secret: process.env.RAZORPAY_API_SECRET,
+});
 
 // Connect to Database
 connectDB();

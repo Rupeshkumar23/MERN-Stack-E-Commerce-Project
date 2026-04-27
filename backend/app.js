@@ -5,6 +5,9 @@ import order from "./routes/orderRoutes.js";
 import errorMiddleware from "./middleware/error.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
+import dotenv from "dotenv";
+dotenv.config({ path: "backend/config/config.env" });
+import payment from "./routes/paymentRoutes.js";
 
 const app = express();
 
@@ -21,6 +24,7 @@ app.use(fileUpload());
 app.use("/api/v1/", product);
 app.use("/api/v1/", user);
 app.use("/api/v1/", order);
+app.use("/api/v1/", payment);
 
 // Error Middleware (MUST be placed after all routes)
 app.use(errorMiddleware);

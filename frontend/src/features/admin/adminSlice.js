@@ -49,7 +49,9 @@ const initialState = {
     loading: false,
     error: null,
     message: null,
-    resultsPerPage: 0,
+    resultsPerPage: 10,
+    totalPages: 1,
+    currentPage: 1,
 };
 
 const adminSlice = createSlice({
@@ -95,7 +97,9 @@ const adminSlice = createSlice({
                 state.success = action.payload.success;
                 state.productCount = action.payload.productCount;
                 state.outOfStock = action.payload.outOfStock;
-                state.resultsPerPage = action.payload.resultsPerPage;
+                state.resultsPerPage = action.payload.resultsPerPage || state.resultsPerPage;
+                state.totalPages = action.payload.totalPages || state.totalPages;
+                state.currentPage = action.payload.currentPage || state.currentPage;
             })
             .addCase(fetchAdminProducts.rejected, (state, action) => {
                 state.loading = false;

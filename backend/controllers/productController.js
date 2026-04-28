@@ -213,19 +213,38 @@ export const adminDeleteReview = async (req, res, next) => {
 
 // Admin View all products
 export const getAllProductsByAdmin = async (req, res, next) => {
-    const resultsPerPage = 10;
-    const products = await Product.find();
-    
-    const productCount = await Product.countDocuments();
-    const outOfStock = await Product.countDocuments({ stock: 0 });
+    try {
+        const resultsPerPage = 10;
+        const currentPage = Number(req.query.page) || 1;
 
-    res.status(200).json({
-        success: true,
-        products,
-        productCount,
-        outOfStock,
-        resultsPerPage
-    });
+        // Get total count first
+        const productCount = await Product.countDocuments();
+        const outOfStock = await Product.countDocuments({ stock: 0 });
+
+        // Calculate total pages
+        const totalPages = Math.ceil(productCount / resultsPerPage);
+
+        // Handle invalid page numbers
+        if (totalPages > 0 && currentPage > totalPages) {
+            return next(new HandleError("This page doesn't exist", 404));
+        }
+
+        // Apply pagination: skip and limit
+        const skip = resultsPerPage * (currentPage - 1);
+        const products = await Product.find().skip(skip).limit(resultsPerPage);
+
+        res.status(200).json({
+            success: true,
+            products,
+            productCount,
+            outOfStock,
+            resultsPerPage,
+            totalPages,
+            currentPage
+        });
+    } catch (error) {
+        next(error);
+    }
 };
 
 // Get All Reviews

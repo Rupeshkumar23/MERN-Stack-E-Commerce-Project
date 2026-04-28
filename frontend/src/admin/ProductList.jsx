@@ -15,9 +15,11 @@ const ProductList = () => {
     const [currentPage, setCurrentPage] = useState(1);
 
     // Get data from Redux store
-    const { products, loading, productCount, resultsPerPage } = useSelector(
+    const { products, loading, productCount, resultsPerPage, totalPages: storeTotalPages } = useSelector(
         (state) => state.admin
     );
+
+    const effectiveResultsPerPage = resultsPerPage || 10;
 
     // Fetch products whenever the page changes
     useEffect(() => {
@@ -25,7 +27,7 @@ const ProductList = () => {
     }, [dispatch, currentPage]);
 
     // Calculate total pages
-    const totalPages = Math.ceil(productCount / resultsPerPage) || 1;
+    const totalPages = Math.max(1, storeTotalPages, Math.ceil(productCount / effectiveResultsPerPage));
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -155,9 +157,8 @@ const ProductList = () => {
                             {!loading && productCount > 0 && (
                                 <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between bg-gray-50/50">
                                     <span className="text-sm text-gray-500 font-medium">
-                                        Showing {(currentPage - 1) * resultsPerPage + 1} to {Math.min(currentPage * resultsPerPage, productCount)} of {productCount} products
+                                        Showing {(currentPage - 1) * effectiveResultsPerPage + 1} to {Math.min(currentPage * effectiveResultsPerPage, productCount)} of {productCount} products
                                     </span>
-                                    
                                     <div className="flex items-center gap-2">
                                         <button 
                                             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}

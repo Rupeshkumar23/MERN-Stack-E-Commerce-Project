@@ -28,10 +28,8 @@ const Navbar = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Navigate with URL encoded keyword parameter
       navigate(`/products?keyword=${encodeURIComponent(searchQuery.trim())}`);
     } else {
-      // Navigate to default products page if empty
       navigate("/products");
     }
     setSearchQuery("");

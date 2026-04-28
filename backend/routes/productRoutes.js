@@ -8,7 +8,8 @@ import {
     viewProductReviews,
     createProductReview,
     adminDeleteReview,
-    getAllProductsByAdmin
+    getAllProductsByAdmin,
+    getAllReviewsByAdmin
 } from "../controllers/productController.js";
 import { roleBasedAccess, verifyUser } from "../helper/userAuth.js";
 
@@ -26,5 +27,6 @@ router.route("/admin/reviews").get(verifyUser, roleBasedAccess("admin"), viewPro
 
 //AdminView All Products
 router.route("/admin/products").get(verifyUser, roleBasedAccess("admin"), getAllProductsByAdmin);
+router.route("/admin/all-reviews").get(verifyUser, roleBasedAccess("admin"), getAllReviewsByAdmin);
 
 export default router;

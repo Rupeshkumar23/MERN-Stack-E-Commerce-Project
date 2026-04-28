@@ -12,18 +12,18 @@ const Navbar = () => {
   // Extract cartItems from the Redux state to display the dynamic count
   const { cartItems } = useSelector((state) => state.cart);
   
-  const[profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
-const handleLogout = async () => {
-  await dispatch(logout());
-  toast.success("Logged out successfully");
-  setProfileDropdownOpen(false);
-  setOpen(false);
-  navigate("/login"); 
-};
+  const handleLogout = async () => {
+    await dispatch(logout());
+    toast.success("Logged out successfully");
+    setProfileDropdownOpen(false);
+    setOpen(false);
+    navigate("/login"); 
+  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -78,7 +78,7 @@ const handleLogout = async () => {
               </button>
             </form>
 
-            {/* Cart - Updated with dynamic count from Redux */}
+            {/* Cart */}
             <Link to="/cart" className="relative text-gray-700 hover:text-blue-600 transition">
               <ShoppingCart />
               {cartItems?.length > 0 && (
@@ -109,7 +109,7 @@ const handleLogout = async () => {
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                 >
                   <img
-                    src={user?.avatar?.url}
+                    src={user?.avatar?.url || "/default-avatar.png"}
                     alt={user?.name}
                     title={user?.name}
                     className="w-10 h-10 rounded-full object-cover border-2 border-blue-600"
@@ -129,6 +129,19 @@ const handleLogout = async () => {
                       >
                         My Profile
                       </Link>
+
+                      {/* --- ADDED ADMIN LINK FOR DESKTOP DROPDOWN --- */}
+                      {user && user.role === "admin" && (
+                        <Link
+                          to="/admin/dashboard"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          Admin Dashboard
+                        </Link>
+                      )}
+                      {/* --------------------------------------------- */}
+
                       <Link
                         to="/orders/user"
                         onClick={() => setProfileDropdownOpen(false)}
@@ -166,7 +179,7 @@ const handleLogout = async () => {
       </div>
 
       {/* Mobile Menu */}
-      <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${open ? "max-h-[450px] opacity-100 translate-y-0" : "max-h-0 opacity-0 -translate-y-2"}`}>
+      <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${open ? "max-h-[500px] opacity-100 translate-y-0" : "max-h-0 opacity-0 -translate-y-2"}`}>
         <div className="flex flex-col p-4 gap-4 bg-white shadow-md">
           <Link onClick={() => setOpen(false)} className="text-gray-700 hover:text-blue-600 transition font-semibold" to="/">
             Home
@@ -181,7 +194,6 @@ const handleLogout = async () => {
             Contact Us
           </Link>
 
-          {/* Mobile Login/Register / Logout logic from the video */}
           {!isAuthenticated ? (
             <div className="flex flex-col gap-4">
               <Link
@@ -203,7 +215,7 @@ const handleLogout = async () => {
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-3">
                 <img
-                  src={user?.avatar?.url}
+                  src={user?.avatar?.url || "/default-avatar.png"}
                   alt={user?.name || "Profile"}
                   className="w-10 h-10 rounded-full object-cover border-2 border-blue-600"
                 />
@@ -220,6 +232,19 @@ const handleLogout = async () => {
                 >
                   My Profile
                 </Link>
+
+                {/* --- ADDED ADMIN LINK FOR MOBILE MENU --- */}
+                {user && user.role === "admin" && (
+                  <Link
+                    to="/admin/dashboard"
+                    onClick={() => setOpen(false)}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Admin Dashboard
+                  </Link>
+                )}
+                {/* -------------------------------------- */}
+
                 <Link
                   to="/orders/user"
                   onClick={() => setOpen(false)}
@@ -236,7 +261,7 @@ const handleLogout = async () => {
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="text-left  px-4 text-red-600 hover:text-red-700 transition font-semibold"
+                  className="text-left px-4 text-red-600 hover:text-red-700 transition font-semibold"
                 >
                   Logout
                 </button>

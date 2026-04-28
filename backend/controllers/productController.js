@@ -117,6 +117,7 @@ export const deleteProduct = async (req, res, next) => {
         next(error);
     }
 };
+
 // Create Product Review
 export const createProductReview = async (req, res, next) => {
     const { rating, comment, productId } = req.body;
@@ -182,6 +183,7 @@ export const viewProductReviews = async (req, res, next) => {
         reviews: product.reviews,
     });
 };
+
 //Delete Reviews
 export const adminDeleteReview = async (req, res, next) => {
     const product = await Product.findById(req.query.productId);
@@ -208,12 +210,45 @@ export const adminDeleteReview = async (req, res, next) => {
         message: "Review Deleted Successfully",
     });
 };
+
 // Admin View all products
 export const getAllProductsByAdmin = async (req, res, next) => {
+    const resultsPerPage = 10;
     const products = await Product.find();
     
+    const productCount = await Product.countDocuments();
+    const outOfStock = await Product.countDocuments({ stock: 0 });
+
     res.status(200).json({
         success: true,
         products,
+        productCount,
+        outOfStock,
+        resultsPerPage
+    });
+};
+
+// Get All Reviews
+export const getAllReviewsByAdmin = async (req, res, next) => {
+    const products = await Product.find();
+
+    let allReviews = [];
+
+    products.forEach((product) => {
+        product.reviews.forEach((review) => {
+            allReviews.push({
+                ...review.toObject(),
+                productName: product.name,
+                productImage: product.images[0]?.url,
+                productId: product._id
+            });
+        });
+    });
+
+    allReviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.status(200).json({
+        success: true,
+        reviews: allReviews
     });
 };

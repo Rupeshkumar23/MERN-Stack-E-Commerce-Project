@@ -22,6 +22,8 @@ import Payment from "./pages/cart/Payment";
 import PaymentSuccess from "./pages/cart/PaymentSuccess";
 import MyOrders from "./orders/MyOrders";
 import OrderDetails from "./orders/OrderDetails";
+import Dashboard from "./admin/Dashboard";
+import ProductList from "./admin/ProductList";
 
 
 
@@ -56,6 +58,8 @@ const App = () => {
         <Route path="/payment/success" element={<ProtectedRoute element={<PaymentSuccess />} />} />
         <Route path="/orders/user" element={<ProtectedRoute element={<MyOrders />} />} />
         <Route path="/order/:id" element={<ProtectedRoute element={<OrderDetails/>} />} />
+         <Route path="/admin/dashboard" element={<ProtectedRoute adminOnly={true} element={<Dashboard />} />} />
+        <Route path="/admin/products" element={<ProtectedRoute adminOnly={true} element={<ProductList />} />} />
       </Routes>
     </BrowserRouter>
   );

@@ -8,7 +8,7 @@ export const addToCartItem = createAsyncThunk("cart/addToCart", async ({ id, qua
             product: data.product._id,
             name: data.product.name,
             price: data.product.price,
-            image: data.product.image[0].url,
+            image: data.product.images?.[0]?.url || data.product.image?.[0]?.url || data.product.images?.url || data.product.image?.url || 'https://via.placeholder.com/120x120?text=No+Image',
             stock: data.product.stock,
             quantity
         }

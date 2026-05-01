@@ -18,8 +18,9 @@ const ProductDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   
-  // Local state for tracking quantity
+  // Local state for tracking quantity and selected image
   const [quantity, setQuantity] = useState(1);
+  const [selectedImage, setSelectedImage] = useState(0);
 
   // Redux state for product and cart
   const { loading, error, product } = useSelector((state) => state.product);
@@ -75,6 +76,25 @@ const ProductDetails = () => {
     dispatch(addToCartItem({ id: product._id, quantity }));
   };
 
+  const getImageUrl = (image) => {
+    if (!image) return null;
+    if (typeof image === 'string') return image;
+    return image.url || null;
+  };
+
+  const imageItems = Array.isArray(product?.images)
+    ? product.images
+    : Array.isArray(product?.image)
+    ? product.image
+    : product?.images
+    ? [product.images]
+    : product?.image
+    ? [product.image]
+    : [];
+
+  const currentImage = imageItems[selectedImage] || imageItems[0] || null;
+  const imageUrl = getImageUrl(currentImage) || getImageUrl(product?.images) || getImageUrl(product?.image) || 'https://via.placeholder.com/400x300?text=No+Image';
+
   return loading ? (
     <Loader />
   ) : (
@@ -84,16 +104,43 @@ const ProductDetails = () => {
         <main className="max-w-7xl mx-auto px-4 py-8 md:py-12">
             
             {/* Top Section: Image & Product Info */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 bg-white p-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 bg-white p-8 rounded-2xl shadow-sm">
                 
-                {/* Image Gallery */}
-                <div className="aspect-square overflow-hidden rounded-xl">
-                    {product?.image && product.image.length > 0 && (
-                        <img 
-                            src={product.image[0].url} 
-                            alt={product.name} 
-                            className="w-full h-full object-cover transition-transform hover:scale-105 duration-700" 
+                {/* Image Gallery Section */}
+                <div className="flex flex-col gap-4">
+                    {/* Main Image */}
+                    <div className="aspect-square overflow-hidden rounded-xl bg-gray-100">
+                        <img
+                            src={imageUrl}
+                            alt={product?.name || "Product"}
+                            className="w-full h-full object-cover transition-transform hover:scale-105 duration-700"
                         />
+                    </div>
+
+                    {/* Thumbnail Selection (Only visible if > 1 image) */}
+                    {imageItems.length > 1 && (
+                        <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-200">
+                            {imageItems.map((img, index) => {
+                                const thumbUrl = getImageUrl(img) || 'https://via.placeholder.com/120x120?text=No+Image';
+                                return (
+                                    <button
+                                        key={index}
+                                        onClick={() => setSelectedImage(index)}
+                                        className={`relative w-20 h-20 rounded-lg overflow-hidden cursor-pointer border-2 shrink-0 transition-all ${
+                                            selectedImage === index
+                                            ? 'border-amber-600 shadow-md ring-4 ring-amber-50'
+                                            : 'border-transparent opacity-70 hover:opacity-100'
+                                        }`}
+                                    >
+                                        <img
+                                            src={thumbUrl}
+                                            alt={`Thumbnail ${index + 1}`}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </button>
+                                );
+                            })}
+                        </div>
                     )}
                 </div>
                 

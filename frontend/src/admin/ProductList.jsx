@@ -6,7 +6,7 @@ import PageTitle from '../components/PageTitle';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Sidebar from './Sidebar';
-import { fetchAdminProducts } from '../features/admin/adminSlice';
+import { fetchAdminProducts, deleteProduct } from '../features/admin/adminSlice';
 
 const ProductList = () => {
     const dispatch = useDispatch();
@@ -25,6 +25,13 @@ const ProductList = () => {
     useEffect(() => {
         dispatch(fetchAdminProducts(currentPage));
     }, [dispatch, currentPage]);
+
+    // Handle delete product
+    const handleDeleteProduct = (productId) => {
+        if (window.confirm('Are you sure you want to delete this product?')) {
+            dispatch(deleteProduct(productId));
+        }
+    };
 
     // Calculate total pages
     const totalPages = Math.max(1, storeTotalPages, Math.ceil(productCount / effectiveResultsPerPage));
@@ -89,7 +96,7 @@ const ProductList = () => {
                                                         <div className="flex items-center gap-4">
                                                             <div className="h-12 w-12 rounded-lg border border-gray-100 overflow-hidden shrink-0">
                                                                 <img 
-                                                                    src={product.image[0]?.url} 
+                                                                    src={product.image?.[0]?.url || product.image?.url || product.images?.[0]?.url || product.images?.url || 'https://via.placeholder.com/120x120?text=No+Image'} 
                                                                     alt={product.name} 
                                                                     className="w-full h-full object-cover" 
                                                                 />
@@ -138,6 +145,7 @@ const ProductList = () => {
                                                                 <Edit size={18} />
                                                             </Link>
                                                             <button 
+                                                                onClick={() => handleDeleteProduct(product._id)}
                                                                 title="Delete Product"
                                                                 className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
                                                             >

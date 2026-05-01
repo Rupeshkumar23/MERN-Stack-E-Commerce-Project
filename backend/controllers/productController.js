@@ -1,11 +1,46 @@
 import Product from "../models/productModel.js";
 import HandleError from "../helper/handleError.js";
 import APIHelper from "../helper/APIHelper.js";
+import {v2 as cloudinary} from "cloudinary";
+
+const uploadFileToCloudinary = async (file) => {
+    if (file.tempFilePath) {
+        return cloudinary.uploader.upload(file.tempFilePath, {
+            folder: "products",
+        });
+    }
+
+    if (file.data) {
+        const dataUri = `data:${file.mimetype};base64,${file.data.toString("base64")}`;
+        return cloudinary.uploader.upload(dataUri, {
+            folder: "products",
+        });
+    }
+
+    throw new Error("Invalid file upload data");
+};
 
 // Create Product (POST)
 export const addProducts = async (req, res, next) => {
     try {
-        req.body.user = req.user.id; 
+        let images = [];
+
+        if (req.files && req.files.image) {
+            const files = Array.isArray(req.files.image) ? req.files.image : [req.files.image];
+
+            for (const file of files) {
+                const myCloud = await uploadFileToCloudinary(file);
+
+                images.push({
+                    public_id: myCloud.public_id,
+                    url: myCloud.secure_url,
+                });
+            }
+        }
+
+        req.body.user = req.user.id;
+        req.body.images = images;
+
         const product = await Product.create(req.body);
 
         res.status(201).json({
@@ -84,6 +119,30 @@ export const updateProduct = async (req, res, next) => {
             return next(new HandleError("Product not found", 404));
         }
 
+        let images = product.images; // Keep existing images by default
+
+        if (req.files && req.files.image) {
+            // Delete existing images from Cloudinary
+            for (const img of product.images) {
+                await cloudinary.uploader.destroy(img.public_id);
+            }
+
+            // Upload new images
+            const files = Array.isArray(req.files.image) ? req.files.image : [req.files.image];
+            images = [];
+
+            for (const file of files) {
+                const myCloud = await uploadFileToCloudinary(file);
+
+                images.push({
+                    public_id: myCloud.public_id,
+                    url: myCloud.secure_url,
+                });
+            }
+        }
+
+        req.body.images = images;
+
         product = await Product.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true
@@ -105,6 +164,11 @@ export const deleteProduct = async (req, res, next) => {
 
         if (!product) {
             return next(new HandleError("Product not found", 404));
+        }
+
+        // Delete images from Cloudinary
+        for (const img of product.images) {
+            await cloudinary.uploader.destroy(img.public_id);
         }
 
         await Product.findByIdAndDelete(req.params.id);

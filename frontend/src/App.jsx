@@ -24,6 +24,9 @@ import MyOrders from "./orders/MyOrders";
 import OrderDetails from "./orders/OrderDetails";
 import Dashboard from "./admin/Dashboard";
 import ProductList from "./admin/ProductList";
+import CreateProduct from "./admin/CreateProduct";
+import UpdateProduct from "./admin/UpdateProduct";
+import AdminOrders from "./admin/AdminOrders";
 
 
 
@@ -60,6 +63,9 @@ const App = () => {
         <Route path="/order/:id" element={<ProtectedRoute element={<OrderDetails/>} />} />
          <Route path="/admin/dashboard" element={<ProtectedRoute adminOnly={true} element={<Dashboard />} />} />
         <Route path="/admin/products" element={<ProtectedRoute adminOnly={true} element={<ProductList />} />} />
+        <Route path="/admin/product/create" element={<ProtectedRoute adminOnly={true} element={<CreateProduct/>} />} />
+        <Route path="/admin/product/:id" element={<ProtectedRoute adminOnly={true} element={<UpdateProduct />} />} />
+        <Route path="/admin/orders" element={<ProtectedRoute adminOnly={true} element={<AdminOrders />} />} />
       </Routes>
     </BrowserRouter>
   );

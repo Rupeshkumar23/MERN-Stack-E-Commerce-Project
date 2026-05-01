@@ -5,6 +5,7 @@ import order from "./routes/orderRoutes.js";
 import errorMiddleware from "./middleware/error.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
+import os from "os";
 import dotenv from "dotenv";
 dotenv.config({ path: "backend/config/config.env" });
 import payment from "./routes/paymentRoutes.js";
@@ -17,7 +18,13 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 // Middleware to parse cookies
 app.use(cookieParser());
 // Middleware to handle file uploads
-app.use(fileUpload());
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: os.tmpdir(),
+    createParentPath: true,
+  })
+);
 
 
 // Routes

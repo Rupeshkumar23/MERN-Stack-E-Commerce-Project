@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -22,13 +22,13 @@ import Payment from "./pages/cart/Payment";
 import PaymentSuccess from "./pages/cart/PaymentSuccess";
 import MyOrders from "./orders/MyOrders";
 import OrderDetails from "./orders/OrderDetails";
+
+// Admin Imports
 import Dashboard from "./admin/Dashboard";
 import ProductList from "./admin/ProductList";
 import CreateProduct from "./admin/CreateProduct";
 import UpdateProduct from "./admin/UpdateProduct";
 import AdminOrders from "./admin/AdminOrders";
-
-
 
 const App = () => {
   const { isAuthenticated } = useSelector((state) => state.user);
@@ -39,31 +39,37 @@ const App = () => {
       dispatch(loadUser());
     }
   }, [dispatch, isAuthenticated]);
+
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/products" element={<Products />} />
         <Route path="/about-us" element={<About />} />
         <Route path="/contact-us" element={<Contact />} />
-        <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
-        <Route path="/profile/update" element={<ProtectedRoute element={<UpdateProfile />} />} />
-        <Route path="/password/update" element={<ProtectedRoute element={<UpdatePassword />} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/password/forget" element={<ForgetPassword />} />
         <Route path="/password/reset/:token" element={<ResetPassword />} />
+
+        {/* Protected User Routes */}
+        <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
+        <Route path="/profile/update" element={<ProtectedRoute element={<UpdateProfile />} />} />
+        <Route path="/password/update" element={<ProtectedRoute element={<UpdatePassword />} />} />
         <Route path="/shipping" element={<ProtectedRoute element={<Shipping />} />} />
         <Route path="/order/confirm" element={<ProtectedRoute element={<OrderConfirm />} />} />
         <Route path="/process/payment" element={<ProtectedRoute element={<Payment />} />} />
         <Route path="/payment/success" element={<ProtectedRoute element={<PaymentSuccess />} />} />
         <Route path="/orders/user" element={<ProtectedRoute element={<MyOrders />} />} />
-        <Route path="/order/:id" element={<ProtectedRoute element={<OrderDetails/>} />} />
-         <Route path="/admin/dashboard" element={<ProtectedRoute adminOnly={true} element={<Dashboard />} />} />
+        <Route path="/order/:id" element={<ProtectedRoute element={<OrderDetails />} />} />
+
+        {/* Protected Admin Routes */}
+        <Route path="/admin/dashboard" element={<ProtectedRoute adminOnly={true} element={<Dashboard />} />} />
         <Route path="/admin/products" element={<ProtectedRoute adminOnly={true} element={<ProductList />} />} />
-        <Route path="/admin/product/create" element={<ProtectedRoute adminOnly={true} element={<CreateProduct/>} />} />
+        <Route path="/admin/product/create" element={<ProtectedRoute adminOnly={true} element={<CreateProduct />} />} />
         <Route path="/admin/product/:id" element={<ProtectedRoute adminOnly={true} element={<UpdateProduct />} />} />
         <Route path="/admin/orders" element={<ProtectedRoute adminOnly={true} element={<AdminOrders />} />} />
       </Routes>

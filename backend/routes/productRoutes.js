@@ -22,7 +22,7 @@ router.route("/review").put(verifyUser, createProductReview);
 
 //Admin
 router.route("/admin/product/create").post(verifyUser, roleBasedAccess("admin"), addProducts);
-router.route("/admin/product/product/:id").put(verifyUser, roleBasedAccess("admin"), updateProduct).delete(verifyUser, roleBasedAccess("admin"), deleteProduct);
+router.route("/admin/product/:id").put(verifyUser, roleBasedAccess("admin"), updateProduct).delete(verifyUser, roleBasedAccess("admin"), deleteProduct);
 router.route("/admin/reviews").get(verifyUser, roleBasedAccess("admin"), viewProductReviews).delete(verifyUser, roleBasedAccess("admin"), adminDeleteReview);
 
 //AdminView All Products

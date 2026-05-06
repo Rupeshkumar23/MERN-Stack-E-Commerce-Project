@@ -1,7 +1,7 @@
 import Product from "../models/productModel.js";
 import HandleError from "../helper/handleError.js";
 import APIHelper from "../helper/APIHelper.js";
-import {v2 as cloudinary} from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 
 const uploadFileToCloudinary = async (file) => {
     if (file.tempFilePath) {
@@ -119,33 +119,69 @@ export const updateProduct = async (req, res, next) => {
             return next(new HandleError("Product not found", 404));
         }
 
-        let images = product.images; // Keep existing images by default
+        let images = [];
+        
+        // 1. Check if images are coming as base64 strings in req.body.image (from frontend FormData)
+        if (req.body.image) {
+            if (typeof req.body.image === "string") {
+                images.push(req.body.image);
+            } else if (Array.isArray(req.body.image)) {
+                images = req.body.image;
+            }
+        }
 
-        if (req.files && req.files.image) {
+        // 2. If new images are provided as base64 strings, replace the old ones
+        if (images.length > 0) {
             // Delete existing images from Cloudinary
             for (const img of product.images) {
-                await cloudinary.uploader.destroy(img.public_id);
+                if (img.public_id) {
+                    await cloudinary.uploader.destroy(img.public_id);
+                }
             }
 
+            const imagesLinks = [];
             // Upload new images
+            for (let i = 0; i < images.length; i++) {
+                const result = await cloudinary.uploader.upload(images[i], {
+                    folder: "products",
+                });
+                imagesLinks.push({
+                    public_id: result.public_id,
+                    url: result.secure_url,
+                });
+            }
+            req.body.images = imagesLinks;
+
+        // 3. Fallback: If images are coming from req.files (express-fileupload) instead
+        } else if (req.files && req.files.image) {
+            // Delete existing images from Cloudinary
+            for (const img of product.images) {
+                if (img.public_id) {
+                    await cloudinary.uploader.destroy(img.public_id);
+                }
+            }
+
             const files = Array.isArray(req.files.image) ? req.files.image : [req.files.image];
-            images = [];
+            const imagesLinks = [];
 
             for (const file of files) {
                 const myCloud = await uploadFileToCloudinary(file);
-
-                images.push({
+                imagesLinks.push({
                     public_id: myCloud.public_id,
                     url: myCloud.secure_url,
                 });
             }
-        }
+            req.body.images = imagesLinks;
 
-        req.body.images = images;
+        // 4. No new images provided, keep the old ones intact
+        } else {
+            req.body.images = product.images;
+        }
 
         product = await Product.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
-            runValidators: true
+            runValidators: true,
+            useFindAndModify: false
         });
 
         res.status(200).json({
@@ -166,12 +202,17 @@ export const deleteProduct = async (req, res, next) => {
             return next(new HandleError("Product not found", 404));
         }
 
-        // Delete images from Cloudinary
-        for (const img of product.images) {
-            await cloudinary.uploader.destroy(img.public_id);
+        // Delete images from Cloudinary securely
+        if (product.images && product.images.length > 0) {
+            for (const img of product.images) {
+                if (img.public_id) {
+                    await cloudinary.uploader.destroy(img.public_id);
+                }
+            }
         }
 
-        await Product.findByIdAndDelete(req.params.id);
+        // Delete product from database
+        await product.deleteOne();
 
         res.status(200).json({
             success: true,

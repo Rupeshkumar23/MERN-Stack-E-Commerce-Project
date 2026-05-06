@@ -21,6 +21,24 @@ import {
 import { getProductDetails, removeErrors } from "../features/products/productSlice";
 import { updateProduct, removeErrors as removeAdminErrors, removeSuccess } from "../features/admin/adminSlice";
 
+const normalizeImage = (image) => {
+  if (!image) return null;
+  if (typeof image === 'string') return image;
+  if (Array.isArray(image)) {
+    if (image.length === 0) return null;
+    return normalizeImage(image[0]);
+  }
+  return image.url || image;
+};
+
+const toImageArray = (image) => {
+  if (!image) return [];
+  if (Array.isArray(image)) return image;
+  return [image];
+};
+
+const getImageUrl = (image) => normalizeImage(image) || 'https://via.placeholder.com/120x120?text=No+Image';
+
 const UpdateProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,8 +51,11 @@ const UpdateProduct = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Dress");
   const [stock, setStock] = useState("");
+
+  // Track new images and old images separately
   const [images, setImages] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
+  const [oldImages, setOldImages] = useState([]);
 
   const { loading: productLoading, error: productError, product } = useSelector((state) => state.product);
   const { loading: adminLoading, error: adminError, success } = useSelector((state) => state.admin);
@@ -45,29 +66,32 @@ const UpdateProduct = () => {
     "Clothing",
     "Home",
     "Accessories",
+    "Toys", // Added Toys to match video
   ];
 
   // Fetch product details when component mounts
   useEffect(() => {
-    if (id) {
+    if (id && (!product || product._id !== id)) {
       dispatch(getProductDetails(id));
     }
-  }, [dispatch, id]);
+  }, [dispatch, id, product]);
 
   // Populate form when product data is loaded
   useEffect(() => {
-    if (product) {
+    if (product && product._id === id) {
       setName(product.name || "");
       setPrice(product.price || "");
       setMrp(product.mrp || "");
       setDescription(product.description || "");
       setCategory(product.category || "Dress");
       setStock(product.stock || "");
-      if (product.images) {
-        setImagesPreview(product.images.map(img => img.url));
-      }
+
+      // Load existing images into oldImages state from either format
+      setOldImages(
+        toImageArray(product.images || product.image).filter(Boolean)
+      );
     }
-  }, [product]);
+  }, [product, id]);
 
   // Handle errors
   useEffect(() => {
@@ -93,6 +117,11 @@ const UpdateProduct = () => {
   const createProductImageChange = (e) => {
     const files = Array.from(e.target.files);
 
+    // Clear old state when new images are selected
+    setImages([]);
+    setImagesPreview([]);
+    setOldImages([]); // Clear old images to indicate they will be replaced
+
     files.forEach((file) => {
       const reader = new FileReader();
 
@@ -110,7 +139,7 @@ const UpdateProduct = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!name || !price || !mrp || !description || !category || !stock) {
+    if (!name || !price || !mrp || !description || !category || stock === "") {
       toast.error("Please fill all required fields");
       return;
     }
@@ -163,7 +192,7 @@ const UpdateProduct = () => {
                 Update Product
               </h1>
               <p className="text-gray-500 mt-2 font-medium">
-                Modify product details and images
+                Modify existing product information
               </p>
             </div>
 
@@ -298,9 +327,9 @@ const UpdateProduct = () => {
                           <div className="flex flex-col items-center justify-center pt-5 pb-6">
                             <Upload className="w-8 h-8 mb-3 text-gray-400" />
                             <p className="mb-2 text-sm text-gray-500">
-                              <span className="font-semibold">Click to upload</span> or drag and drop
+                              <span className="font-semibold">Click to upload new images</span>
                             </p>
-                            <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                            <p className="text-xs text-gray-500">Selecting new images will replace current ones</p>
                           </div>
                           <input
                             type="file"
@@ -312,25 +341,55 @@ const UpdateProduct = () => {
                         </label>
                       </div>
 
-                      {/* Image Previews */}
-                      {imagesPreview.length > 0 && (
-                        <div className="grid grid-cols-3 gap-4">
-                          {imagesPreview.map((image, index) => (
-                            <div key={index} className="relative group">
-                              <img
-                                src={image}
-                                alt={`Preview ${index + 1}`}
-                                className="w-full h-24 object-cover rounded-lg border border-gray-200"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => removeImage(index)}
-                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                              >
-                                <X size={12} />
-                              </button>
+                      {/* Image Previews Section */}
+                      {(oldImages.length > 0 || imagesPreview.length > 0) && (
+                        <div className="space-y-4">
+
+                          {/* Current Old Images */}
+                          {oldImages.length > 0 && (
+                            <div>
+                              <p className="text-sm font-semibold text-gray-600 mb-2">Current Images:</p>
+                              <div className="grid grid-cols-3 gap-4">
+                                {oldImages.map((image, index) => (
+                                  <div key={index} className="relative group rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                                    <span className="absolute top-0 left-0 bg-gray-800 text-white text-[10px] px-2 py-0.5 rounded-br-lg z-10">Current</span>
+                                    <img
+                                      src={getImageUrl(image)}
+                                      alt={`Current ${index + 1}`}
+                                      className="w-full h-24 object-cover"
+                                    />
+                                  </div>
+                                ))}
+                              </div>
                             </div>
-                          ))}
+                          )}
+
+                          {/* New Images Preview */}
+                          {imagesPreview.length > 0 && (
+                            <div>
+                              <p className="text-sm font-semibold text-indigo-600 mb-2">New Images (Will Replace Current):</p>
+                              <div className="grid grid-cols-3 gap-4">
+                                {imagesPreview.map((image, index) => (
+                                  <div key={index} className="relative group rounded-lg overflow-hidden border border-indigo-200 shadow-sm">
+                                    <span className="absolute top-0 left-0 bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-br-lg z-10">New</span>
+                                    <img
+                                      src={image}
+                                      alt={`Preview ${index + 1}`}
+                                      className="w-full h-24 object-cover"
+                                    />
+                                    <button
+                                      type="button"
+                                      onClick={() => removeImage(index)}
+                                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                                    >
+                                      <X size={12} />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
                         </div>
                       )}
                     </div>

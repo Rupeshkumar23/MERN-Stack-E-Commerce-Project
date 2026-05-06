@@ -1,12 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { TrendingUp, Edit, Trash2 } from 'lucide-react';
+import { TrendingUp, Edit, Trash2, Loader2 } from 'lucide-react'; // Added Loader2
+import { toast } from 'react-hot-toast'; 
 import PageTitle from '../components/PageTitle';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Sidebar from './Sidebar';
 import { fetchAdminProducts, deleteProduct } from '../features/admin/adminSlice';
+
+const getProductImageUrl = (product) => {
+    const normalizeImage = (image) => {
+        if (!image) return null;
+        if (typeof image === 'string') return image;
+        if (Array.isArray(image)) {
+            if (image.length === 0) return null;
+            return normalizeImage(image[0]);
+        }
+        return image.url || image;
+    };
+
+    return (
+        normalizeImage(product?.images) ||
+        normalizeImage(product?.image) ||
+        'https://via.placeholder.com/120x120?text=No+Image'
+    );
+};
 
 const ProductList = () => {
     const dispatch = useDispatch();
@@ -14,8 +33,8 @@ const ProductList = () => {
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
 
-    // Get data from Redux store
-    const { products, loading, productCount, resultsPerPage, totalPages: storeTotalPages } = useSelector(
+    // Get data from Redux store, including the 'deleting' state
+    const { products, loading, productCount, resultsPerPage, totalPages: storeTotalPages, deleting } = useSelector(
         (state) => state.admin
     );
 
@@ -26,10 +45,23 @@ const ProductList = () => {
         dispatch(fetchAdminProducts(currentPage));
     }, [dispatch, currentPage]);
 
-    // Handle delete product
+    // Handle delete product with promise and pagination check
     const handleDeleteProduct = (productId) => {
-        if (window.confirm('Are you sure you want to delete this product?')) {
-            dispatch(deleteProduct(productId));
+        const isConfirmed = window.confirm('Are you sure you want to delete this product?');
+        if (isConfirmed) {
+            dispatch(deleteProduct(productId)).then((action) => {
+                if (action.type === "admin/deleteProduct/fulfilled") {
+                    toast.success("Product Deleted Successfully", { position: "top-center", autoClose: 3000 });
+                    
+                    // If it's the last product on the current page, go back to the previous page
+                    if (products.length === 1 && currentPage > 1) {
+                        setCurrentPage((prev) => prev - 1);
+                    } else {
+                        // Re-fetch to bring the next product into the current page to fill the gap
+                        dispatch(fetchAdminProducts(currentPage));
+                    }
+                }
+            });
         }
     };
 
@@ -96,7 +128,7 @@ const ProductList = () => {
                                                         <div className="flex items-center gap-4">
                                                             <div className="h-12 w-12 rounded-lg border border-gray-100 overflow-hidden shrink-0">
                                                                 <img 
-                                                                    src={product.image?.[0]?.url || product.image?.url || product.images?.[0]?.url || product.images?.url || 'https://via.placeholder.com/120x120?text=No+Image'} 
+                                                                    src={getProductImageUrl(product)} 
                                                                     alt={product.name} 
                                                                     className="w-full h-full object-cover" 
                                                                 />
@@ -144,12 +176,18 @@ const ProductList = () => {
                                                             >
                                                                 <Edit size={18} />
                                                             </Link>
+                                                            
                                                             <button 
                                                                 onClick={() => handleDeleteProduct(product._id)}
+                                                                disabled={deleting?.[product._id]}
                                                                 title="Delete Product"
-                                                                className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                                                                className={`p-2 rounded-lg transition-colors ${deleting?.[product._id] ? 'text-gray-400 cursor-not-allowed' : 'text-rose-600 hover:bg-rose-50'}`}
                                                             >
-                                                                <Trash2 size={18} />
+                                                                {deleting?.[product._id] ? (
+                                                                    <Loader2 className="animate-spin" size={18} />
+                                                                ) : (
+                                                                    <Trash2 size={18} />
+                                                                )}
                                                             </button>
                                                         </div>
                                                     </td>
